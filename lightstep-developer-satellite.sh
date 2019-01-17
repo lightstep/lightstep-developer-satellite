@@ -21,9 +21,24 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "Thank you. In the future you may set LIGHTSTEP_API_KEY to skip this step."
 fi
 
+if [ -z "$LIGHTSTEP_EMAIL" ]; then 
+  echo "LIGHTSTEP_EMAIL is not set.  This is the e-mail address you use for sign-in."
+  echo "Please enter your EMAIL name:"
+  read -r LIGHTSTEP_EMAIL
+  echo "Thank you. In the future you may set LIGHTSTEP_EMAIL to skip this step."
+fi
+
+if [ -z "$LIGHTSTEP_PROJECT_ID" ]; then 
+  echo "LIGHTSTEP_PROJECT_ID is not set.  This must be set on the command-line."
+  exit 1
+fi
+
 ## Set env vars to be passed to docker if not set in current environment.
 COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
-: "${COLLECTOR_POOL:=${USER}_developer_pool}"
+: "${COLLECTOR_POOL:=${LIGHTSTEP_EMAIL}_developer_pool}"
+: "${COLLECTOR_INGESTION_TAGS:=developer:${LIGHTSTEP_EMAIL}}"
+: "${COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING:=true}"
+: "${COLLECTOR_PROJECT_ID:=${LIGHTSTEP_PROJECT_ID}}"
 # Set default ports
 : "${COLLECTOR_BABYSITTER_PORT:=8000}"
 : "${COLLECTOR_ADMIN_PLAIN_PORT:=8080}"
@@ -48,5 +63,8 @@ docker run \
   -e COLLECTOR_GRPC_PLAIN_PORT="$COLLECTOR_GRPC_PLAIN_PORT"  -p "$COLLECTOR_GRPC_PLAIN_PORT":"$COLLECTOR_GRPC_PLAIN_PORT" \
   -e COLLECTOR_PLAIN_PORT="$COLLECTOR_PLAIN_PORT"  -p "$COLLECTOR_PLAIN_PORT":"$COLLECTOR_PLAIN_PORT" \
   -e COLLECTOR_REPORTER_BYTES_PER_PROJECT="$COLLECTOR_REPORTER_BYTES_PER_PROJECT" \
+  -e COLLECTOR_INGESTION_TAGS="$COLLECTOR_INGESTION_TAGS" \
+  -e COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING="$COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING" \
+  -e COLLECTOR_PROJECT_ID="$COLLECTOR_PROJECT_ID" \
   --restart always \
   lightstep/collector
