@@ -35,10 +35,12 @@ fi
 
 ## Set env vars to be passed to docker if not set in current environment.
 COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
+# Developer-mode specifics
 : "${COLLECTOR_POOL:=${LIGHTSTEP_EMAIL}_developer_pool}"
 : "${COLLECTOR_INGESTION_TAGS:=developer:${LIGHTSTEP_EMAIL}}"
 : "${COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING:=true}"
 : "${COLLECTOR_PROJECT_ID:=${LIGHTSTEP_PROJECT_ID}}"
+# LightStep internal dev-local
 : "${COLLECTOR_RAINBOW_GRPC_HOST:=localhost}"
 : "${COLLECTOR_RAINBOW_GRPC_PORT:=7890}"
 : "${COLLECTOR_RAINBOW_GRPC_PLAINTEXT:=true}"
