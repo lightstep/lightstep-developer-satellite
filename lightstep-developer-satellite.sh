@@ -21,11 +21,11 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "Thank you. In the future you may set LIGHTSTEP_API_KEY to skip this step."
 fi
 
-if [ -z "$LIGHTSTEP_NAME" ]; then 
-  echo "LIGHTSTEP_NAME is not set.  This is the e-mail address you use for sign-in."
-  echo "Please enter your EMAIL name:"
-  read -r LIGHTSTEP_NAME
-  echo "Thank you. In the future you may set LIGHTSTEP_NAME to skip this step."
+if [ -z "$LIGHTSTEP_USER" ]; then 
+  echo "LIGHTSTEP_USER is not set.  This is the e-mail address you use for sign-in."
+  echo "Please enter your user name:"
+  read -r LIGHTSTEP_USER
+  echo "Thank you. In the future you may set LIGHTSTEP_USER to skip this step."
 fi
 
 if [ -z "$LIGHTSTEP_PROJECT_ID" ]; then 
@@ -36,8 +36,8 @@ fi
 ## Set env vars to be passed to docker if not set in current environment.
 COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
 # Developer-mode specifics
-: "${COLLECTOR_POOL:=${LIGHTSTEP_NAME}_developer_pool}"
-: "${COLLECTOR_INGESTION_TAGS:=lightstep.developer:${LIGHTSTEP_NAME}}"
+: "${COLLECTOR_POOL:=${LIGHTSTEP_USER}_developer_pool}"
+: "${COLLECTOR_INGESTION_TAGS:=lightstep.developer:${LIGHTSTEP_USER}}"
 : "${COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING:=true}"
 : "${COLLECTOR_PROJECT_ID:=${LIGHTSTEP_PROJECT_ID}}"
 # Set default ports
