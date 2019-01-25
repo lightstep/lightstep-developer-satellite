@@ -21,11 +21,11 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "Thank you. In the future you may set LIGHTSTEP_API_KEY to skip this step."
 fi
 
-if [ -z "$LIGHTSTEP_EMAIL" ]; then 
-  echo "LIGHTSTEP_EMAIL is not set.  This is the e-mail address you use for sign-in."
+if [ -z "$LIGHTSTEP_NAME" ]; then 
+  echo "LIGHTSTEP_NAME is not set.  This is the e-mail address you use for sign-in."
   echo "Please enter your EMAIL name:"
-  read -r LIGHTSTEP_EMAIL
-  echo "Thank you. In the future you may set LIGHTSTEP_EMAIL to skip this step."
+  read -r LIGHTSTEP_NAME
+  echo "Thank you. In the future you may set LIGHTSTEP_NAME to skip this step."
 fi
 
 if [ -z "$LIGHTSTEP_PROJECT_ID" ]; then 
@@ -36,14 +36,10 @@ fi
 ## Set env vars to be passed to docker if not set in current environment.
 COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
 # Developer-mode specifics
-: "${COLLECTOR_POOL:=${LIGHTSTEP_EMAIL}_developer_pool}"
-: "${COLLECTOR_INGESTION_TAGS:=developer:${LIGHTSTEP_EMAIL}}"
+: "${COLLECTOR_POOL:=${LIGHTSTEP_NAME}_developer_pool}"
+: "${COLLECTOR_INGESTION_TAGS:=lightstep.developer:${LIGHTSTEP_NAME}}"
 : "${COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING:=true}"
 : "${COLLECTOR_PROJECT_ID:=${LIGHTSTEP_PROJECT_ID}}"
-# LightStep internal dev-local
-: "${COLLECTOR_RAINBOW_GRPC_HOST:=localhost}"
-: "${COLLECTOR_RAINBOW_GRPC_PORT:=7890}"
-: "${COLLECTOR_RAINBOW_GRPC_PLAINTEXT:=true}"
 # Set default ports
 : "${COLLECTOR_BABYSITTER_PORT:=8000}"
 : "${COLLECTOR_ADMIN_PLAIN_PORT:=8080}"
@@ -55,11 +51,10 @@ COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
 
 
 # Pull down the latest version of the collector from docker hub
-# (Note, this does not happen automatically with docker run)
+a # (Note, this does not happen automatically with docker run)
 docker pull lightstep/collector
 
 docker run \
-  -e COLLECTOR_LOGGING_STDERR_CONFIG_ENABLED="true" \
   -e COLLECTOR_API_KEY="$COLLECTOR_API_KEY" \
   -e COLLECTOR_POOL="$COLLECTOR_POOL" \
   -e COLLECTOR_BABYSITTER_PORT="$COLLECTOR_BABYSITTER_PORT"  -p "$COLLECTOR_BABYSITTER_PORT":"$COLLECTOR_BABYSITTER_PORT" \
@@ -71,7 +66,4 @@ docker run \
   -e COLLECTOR_INGESTION_TAGS="$COLLECTOR_INGESTION_TAGS" \
   -e COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING="$COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING" \
   -e COLLECTOR_PROJECT_ID="$COLLECTOR_PROJECT_ID" \
-  -e COLLECTOR_RAINBOW_GRPC_HOST="$COLLECTOR_RAINBOW_GRPC_HOST" \
-  -e COLLECTOR_RAINBOW_GRPC_PORT="$COLLECTOR_RAINBOW_GRPC_PORT" \
-  -e COLLECTOR_RAINBOW_GRPC_PLAINTEXT="$COLLECTOR_RAINBOW_GRPC_PLAINTEXT" \
   lightstep/collector
