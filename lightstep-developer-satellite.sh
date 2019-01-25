@@ -51,7 +51,7 @@ COLLECTOR_API_KEY="$LIGHTSTEP_API_KEY"
 
 
 # Pull down the latest version of the collector from docker hub
-a # (Note, this does not happen automatically with docker run)
+# (Note, this does not happen automatically with docker run)
 docker pull lightstep/collector
 
 docker run \
