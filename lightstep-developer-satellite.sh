@@ -29,8 +29,8 @@ if [ -z "$LIGHTSTEP_USER" ]; then
 fi
 
 if [ -z "$LIGHTSTEP_PROJECT" ]; then 
-  echo "LIGHTSTEP_PROJECT is not set.  This is the e-mail address you use for sign-in."
-  echo "Please enter your user name:"
+  echo "LIGHTSTEP_PROJECT is not set.  This is the project you will to report."
+  echo "Please enter your project name:"
   read -r LIGHTSTEP_PROJECT
   echo "Thank you. In the future you may set LIGHTSTEP_PROJECT to skip this step."
 fi
