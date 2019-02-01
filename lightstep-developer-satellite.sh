@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script should be called with these variables set:
+#   LIGHTSTEP_API_KEY
+#   LIGHTSTEP_USER
+#   LIGHTSTEP_PROJECT
+
 IMAGE=lightstep/developer-satellite
 IMAGE_VERSION=${IMAGE}:latest
 
@@ -38,7 +43,11 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "Thank you. In the future you may set LIGHTSTEP_API_KEY to skip this step."
 fi
 
-## Set env vars to be passed to docker if not set in current environment.
+# For certain configuration parameters, we want to set defaults if they haven't been set
+# in the environment.  Only the COLLECTOR_API_KEY is set unconditionally here.  All the
+# other COLLECTOR_ environment variables will override the values derived here, including
+# those derived from the LIGHTSTEP_* argument variables.
+
 COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # Developer-mode specifics
 : "${COLLECTOR_POOL:=${LIGHTSTEP_USER}_${LIGHTSTEP_PROJECT}_developer}"
@@ -61,7 +70,7 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # (Note, this does not happen automatically with docker run)
 docker pull ${IMAGE_VERSION}
 
-
+# Helper function to compute a -p argument to docker when the port is non-zero.
 function map_port {
     local port=$1
     if [[ "$port" = "0" ]]; then
@@ -71,6 +80,7 @@ function map_port {
     fi
 }
 
+# These variables will pass through to the docker environment.
 VARS="
  COLLECTOR_ADMIN_PLAIN_PORT
  COLLECTOR_ADMIN_SECURE_PORT
@@ -101,6 +111,7 @@ for var in ${VARS}; do
     DARGS=${DARGS}" -e "${var}=${!var}
 done
 
+# This exposes all the ports from the docker container.
 PARGS="
  $(map_port $COLLECTOR_ADMIN_PLAIN_PORT)
  $(map_port $COLLECTOR_ADMIN_SECURE_PORT)
