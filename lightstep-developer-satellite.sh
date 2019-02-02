@@ -76,6 +76,8 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 : "${COLLECTOR_LOGGING_STDERR_FORMAT_HIDE_CALLSTACK:=false}"
 : "${COLLECTOR_LOGGING_VERBOSE:=0}"
 : "${COLLECTOR_RAINBOW_GRPC_PORT:=0}"
+: "${COLLECTOR_LIGHTSTEP_COLLECTOR_PLAINTEXT:=false}"
+: "${COLLECTOR_LOGGING_STDERR_CONFIG_FORMAT_HIDE_CALLSTACK:=true}"
 
 # Pull down the latest version of the collector from docker hub
 # (Note, this does not happen automatically with docker run)
