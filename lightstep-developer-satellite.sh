@@ -143,6 +143,4 @@ container=lightstep_developer_satellite
 docker kill ${container} 2> /dev/null
 docker rm ${container} 2> /dev/null
 
-echo DOCKER ARGS ${DARGS}
-
 docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE}
