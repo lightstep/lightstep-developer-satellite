@@ -43,10 +43,12 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "Thank you. In the future you may set LIGHTSTEP_API_KEY to skip this step."
 fi
 
-# For certain configuration parameters, we want to set defaults if they haven't been set
-# in the environment.  Only the COLLECTOR_API_KEY is set unconditionally here.  All the
-# other COLLECTOR_ environment variables will override the values derived here, including
-# those derived from the LIGHTSTEP_* argument variables.
+# For certain configuration parameters, we want to set defaults if
+# they haven't been set in the environment.  Only the
+# COLLECTOR_API_KEY is set unconditionally here.  All the other
+# COLLECTOR_* environment variables will override the values derived
+# here, including those derived from the LIGHTSTEP_* argument
+# variables.
 
 COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # Developer-mode specifics
@@ -55,10 +57,10 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 : "${COLLECTOR_INGESTION_TAGS:=lightstep.developer:${LIGHTSTEP_USER}}"
 : "${COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING:=true}"
 # Set default ports
-: "${COLLECTOR_GRPC_PLAIN_PORT:=8360}"
+: "${COLLECTOR_HTTP_PLAIN_PORT:=8360}"
 : "${COLLECTOR_ADMIN_PLAIN_PORT:=8361}"
 # Disable unused ports
-: "${COLLECTOR_HTTP_PLAIN_PORT:=0}"
+: "${COLLECTOR_GRPC_PLAIN_PORT:=0}"
 : "${COLLECTOR_PLAIN_PORT:=0}"
 : "${COLLECTOR_BABYSITTER_PORT:=0}"
 : "${COLLECTOR_ADMIN_SECURE_PORT:=0}"
@@ -84,16 +86,6 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # (Note, this does not happen automatically with docker run)
 docker pull ${IMAGE_VERSION}
 
-# Helper function to compute a -p argument to docker when the port is non-zero.
-function map_port {
-    local port=$1
-    if [[ "$port" = "0" ]]; then
-        echo
-    else
-        echo "-p" "$port:$port"
-    fi
-}
-
 # These variables will pass through to the docker environment.
 VARS="
  COLLECTOR_ADMIN_PLAIN_PORT
@@ -101,6 +93,7 @@ VARS="
  COLLECTOR_API_KEY 
  COLLECTOR_BABYSITTER_PORT
  COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING
+ COLLECTOR_GRPC_MAX_MSG_SIZE_BYTES
  COLLECTOR_GRPC_PLAIN_PORT
  COLLECTOR_HTTP_PLAIN_PORT
  COLLECTOR_INGESTION_TAGS
@@ -128,7 +121,17 @@ for var in ${VARS}; do
     DARGS=${DARGS}" -e "${var}=${!var}
 done
 
-# This exposes all the ports from the docker container.
+# Helper function to compute a -p argument to docker when the port is non-zero.
+function map_port {
+    local port=$1
+    if [[ "$port" = "0" ]]; then
+        echo
+    else
+        echo "-p" "$port:$port"
+    fi
+}
+
+# This exposes all the non-zero ports from the docker container.
 PARGS="
  $(map_port $COLLECTOR_ADMIN_PLAIN_PORT)
  $(map_port $COLLECTOR_ADMIN_SECURE_PORT)
