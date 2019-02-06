@@ -69,19 +69,6 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # Allow 16MB reports
 : "${COLLECTOR_GRPC_MAX_MSG_SIZE_BYTES:=16777216}"
 
-# Provide valid disabled defaults for passing through these variables:
-: "${COLLECTOR_LIGHTSTEP_ACCESS_TOKEN:=empty}"
-: "${COLLECTOR_LIGHTSTEP_COLLECTOR_PLAINTEXT:=false}"
-: "${COLLECTOR_LIGHTSTEP_COLLECTOR_PORT:=0}"
-: "${COLLECTOR_LIGHTSTEP_USE_HTTP:=true}"
-: "${COLLECTOR_LIGHTSTEP_VERBOSE:=false}"
-: "${COLLECTOR_LOGGING_STDERR_CONFIG_ENABLED:=false}"
-: "${COLLECTOR_LOGGING_STDERR_CONFIG_FORMAT_HIDE_CALLSTACK:=true}"
-: "${COLLECTOR_LOGGING_STDERR_FORMAT_HIDE_CALLSTACK:=false}"
-: "${COLLECTOR_LOGGING_VERBOSE:=0}"
-: "${COLLECTOR_RAINBOW_GRPC_PLAINTEXT:=false}"
-: "${COLLECTOR_RAINBOW_GRPC_PORT:=0}"
-
 # Pull down the latest version of the collector from docker hub
 # (Note, this does not happen automatically with docker run)
 docker pull ${IMAGE_VERSION}
@@ -117,8 +104,18 @@ VARS="
 
 DARGS=""
 
+# Helper function to compute a -e argument to docker when the environment is non-empty.
+function map_env {
+    local env=$1
+    if [[ "$env" = "" ]]; then
+        echo
+    else
+        printf "%s" "-e ${env}=${!env}"
+    fi
+}
+
 for var in ${VARS}; do
-    DARGS=${DARGS}" -e "${var}=${!var}
+    DARGS="${DARGS} $(map_env ${var})"
 done
 
 # Helper function to compute a -p argument to docker when the port is non-zero.
