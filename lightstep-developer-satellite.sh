@@ -110,7 +110,7 @@ function map_env {
     if [[ "$env" = "" ]]; then
         echo
     else
-        echo "-e" "${env}"="${!env}"
+        printf "%s" "-e ${env}=${!env}"
     fi
 }
 
