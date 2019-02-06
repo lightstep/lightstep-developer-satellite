@@ -107,7 +107,7 @@ DARGS=""
 # Helper function to compute a -e argument to docker when the environment is non-empty.
 function map_env {
     local env=$1
-    if [[ "$env" = "" ]]; then
+    if [[ -z "${!env}" ]]; then
         echo
     else
         printf "%s" "-e ${env}=${!env}"
