@@ -17,7 +17,7 @@ fi
 ID=$(docker ps --all | grep "${IMAGE}" | head -n 1 | cut -d ' ' -f 1 )
 if [ -n "$ID" ]; then
   echo "There is already a lightstep collector running.  You can stop it by running:"
-  echo '  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)'
+  echo '  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
   exit 1
 fi
 
@@ -140,8 +140,5 @@ PARGS="
 "
 
 container=lightstep_developer_satellite
-
-docker kill ${container} 2> /dev/null
-docker rm ${container} 2> /dev/null
 
 docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE}
