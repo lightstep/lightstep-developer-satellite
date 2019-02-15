@@ -18,7 +18,9 @@ ID=$(docker ps --all | grep "${IMAGE}" | head -n 1 | cut -d ' ' -f 1 )
 if [ -n "$ID" ]; then
   echo "There is already a lightstep collector running.  You can stop it by running:"
   echo '  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
-  exit 1
+
+  ## Temporary fix for broken Makefile.
+  exit 0
 fi
 
 if [ -z "$LIGHTSTEP_USER" ]; then 
