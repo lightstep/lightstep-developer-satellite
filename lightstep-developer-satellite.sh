@@ -14,10 +14,10 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-ID=$(docker ps | grep ${IMAGE} | head -n 1 | cut -d ' ' -f 1 )
+ID=$(docker ps --all | grep "${IMAGE}" | head -n 1 | cut -d ' ' -f 1 )
 if [ -n "$ID" ]; then
-  echo "There is already a lightstep collector running.  You can stop it by"
-  echo "running stop-lightstep-collector.sh"
+  echo "There is already a lightstep collector running.  You can stop it by running:"
+  echo '  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)'
   exit 1
 fi
 
