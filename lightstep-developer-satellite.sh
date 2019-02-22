@@ -8,6 +8,8 @@
 IMAGE=lightstep/developer-satellite
 IMAGE_VERSION=${IMAGE}:latest
 
+STOP_CMD='  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
+
 docker > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "This version of the LightStep Satellite requires docker.  Please install docker before proceeding."
@@ -16,11 +18,9 @@ fi
 
 ID=$(docker ps --all | grep "${IMAGE}" | head -n 1 | cut -d ' ' -f 1 )
 if [ -n "$ID" ]; then
-  echo "There is already a lightstep collector running.  You can stop it by running:"
-  echo '  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
-
-  ## Temporary fix for broken Makefile.
-  exit 0
+  echo "There is already a LightStep Satellite running.  You can stop it by running:"
+  echo "${STOP_CMD}"
+  exit 1
 fi
 
 if [ -z "$LIGHTSTEP_USER" ]; then 
@@ -71,7 +71,7 @@ COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
 # Allow 16MB reports
 : "${COLLECTOR_GRPC_MAX_MSG_SIZE_BYTES:=16777216}"
 
-# Pull down the latest version of the collector from docker hub
+# Pull down the latest version of the satellite from docker hub
 # (Note, this does not happen automatically with docker run)
 docker pull ${IMAGE_VERSION}
 
@@ -82,11 +82,11 @@ VARS="
  COLLECTOR_API_KEY 
  COLLECTOR_BABYSITTER_PORT
  COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING
+ COLLECTOR_FORWARDED_TAGS
  COLLECTOR_GRPC_MAX_MSG_SIZE_BYTES
  COLLECTOR_GRPC_PLAIN_PORT
  COLLECTOR_HTTP_PLAIN_PORT
  COLLECTOR_INGESTION_TAGS
- COLLECTOR_FORWARDED_TAGS
  COLLECTOR_LIGHTSTEP_ACCESS_TOKEN
  COLLECTOR_LIGHTSTEP_COLLECTOR_HOST
  COLLECTOR_LIGHTSTEP_COLLECTOR_PLAINTEXT
@@ -142,5 +142,11 @@ PARGS="
 "
 
 container=lightstep_developer_satellite
+
+echo "Starting the LightStep Developer Satellite on port ${COLLECTOR_HTTP_PLAIN_PORT},"
+echo "reporting to the ${LIGHTSTEP_PROJECT} project."
+echo "This process will be restarted by the Docker daemon automatically, including"
+echo "when this machine reboots.  To stop this process, run:"
+echo "${STOP_CMD}"
 
 docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE}
