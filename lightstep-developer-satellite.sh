@@ -143,8 +143,7 @@ PARGS="
 
 container=lightstep_developer_satellite
 
-echo "Starting the LightStep Developer Satellite on port ${COLLECTOR_HTTP_PLAIN_PORT},"
-echo "reporting to the ${LIGHTSTEP_PROJECT} project."
+echo "Starting the LightStep Developer Satellite on port ${COLLECTOR_HTTP_PLAIN_PORT}, reporting to the ${LIGHTSTEP_PROJECT} project."
 echo "This process will be restarted by the Docker daemon automatically, including"
 echo "when this machine reboots.  To stop this process, run:"
 echo "${STOP_CMD}"
