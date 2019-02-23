@@ -46,13 +46,14 @@ if [ -z "$LIGHTSTEP_API_KEY" ]; then
 fi
 
 # For certain configuration parameters, we want to set defaults if
-# they haven't been set in the environment.  Only the
-# COLLECTOR_API_KEY is set unconditionally here.  All the other
-# COLLECTOR_* environment variables will override the values derived
-# here, including those derived from the LIGHTSTEP_* argument
-# variables.
+# they haven't been set in the environment.  Only the API key and
+# forwarded metric tags are always set here.  The other COLLECTOR_*
+# environment variables will override the values derived here,
+# including those derived from the LIGHTSTEP_* argument variables.
 
 COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
+COLLECTOR_FORWARDED_TAGS="developer_satellite:true"
+
 # Developer-mode specifics
 : "${COLLECTOR_POOL:=${LIGHTSTEP_USER}_${LIGHTSTEP_PROJECT}_developer}"
 : "${COLLECTOR_PROJECT_NAME:=${LIGHTSTEP_PROJECT}}"
