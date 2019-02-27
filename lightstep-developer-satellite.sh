@@ -71,6 +71,8 @@ COLLECTOR_FORWARDED_TAGS="developer_satellite:true"
 : "${COLLECTOR_REPORTER_BYTES_PER_PROJECT:=100000000}"
 # Allow 16MB reports
 : "${COLLECTOR_GRPC_MAX_MSG_SIZE_BYTES:=16777216}"
+# Enable meta reports
+: "${COLLECTOR_ENABLE_META_EVENTS:=true}"
 
 # Pull down the latest version of the satellite from docker hub
 # (Note, this does not happen automatically with docker run)
@@ -105,6 +107,7 @@ VARS="
  COLLECTOR_RAINBOW_GRPC_PORT
  COLLECTOR_REPORTER_BYTES_PER_PROJECT
  COLLECTOR_ROUTING_TAGS
+ COLLECTOR_ENABLE_META_EVENTS
 "
 
 DARGS=""
