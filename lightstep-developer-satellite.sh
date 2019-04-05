@@ -151,11 +151,22 @@ PARGS="
  $(map_port $COLLECTOR_PLAIN_PORT)
 "
 
+# Lookup the host's IP address that can be used by other containers to reach
+# this satellite.
+docker_hostip=$(docker network inspect bridge --format '{{ (index .IPAM.Config 0).Gateway }}')
+
+
 container=lightstep_developer_satellite
 
-echo "Starting the LightStep Developer Satellite on port ${COLLECTOR_HTTP_PLAIN_PORT}, reporting to the ${LIGHTSTEP_PROJECT} project."
+echo
+echo "Starting the LightStep Developer Satellite on port ${COLLECTOR_HTTP_PLAIN_PORT}."
+echo
+echo "To access this satellite from inside a Docker container, configure the"
+echo "Tracer's \"collector_host\" to ${docker_hostip}."
+echo
 echo "This process will be restarted by the Docker daemon automatically, including"
 echo "when this machine reboots.  To stop this process, run:"
 echo "${STOP_CMD}"
+echo
 
 docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE}
