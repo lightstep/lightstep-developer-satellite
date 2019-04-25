@@ -5,8 +5,11 @@
 #   LIGHTSTEP_USER
 #   LIGHTSTEP_PROJECT
 
-IMAGE=lightstep/developer-satellite
+# To test an alternate image (e.g., the canary), modify IMAGE.
+: "${IMAGE:=lightstep/developer-satellite}"
+
 IMAGE_VERSION=${IMAGE}:latest
+PSNAME=lightstep_developer_satellite
 
 STOP_CMD='  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
 
@@ -16,11 +19,19 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-ID=$(docker ps --all | grep "${IMAGE}" | head -n 1 | cut -d ' ' -f 1 )
+ID=$(docker ps --all | grep "${PSNAME}" | head -n 1 | cut -d ' ' -f 1 )
 if [ -n "$ID" ]; then
-  echo "There is already a LightStep Satellite running.  You can stop it by running:"
-  echo "${STOP_CMD}"
-  exit 1
+  echo "There is already a LightStep Satellite running.  Stopping it now."
+  while true; do
+    ID=$(docker ps --all | grep "${PSNAME}" | head -n 1 | cut -d ' ' -f 1 )
+    if [ -n "$ID" ]; then
+      echo "Removing docker container $ID"
+      docker kill "$ID" > /dev/null 2>&1 || true
+      docker rm "$ID" > /dev/null 2>&1 || true
+    else
+      break
+    fi
+  done
 fi
 
 if [ -z "$LIGHTSTEP_USER" ]; then 
