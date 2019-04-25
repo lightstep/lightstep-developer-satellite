@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # This script should be called with these variables set:
