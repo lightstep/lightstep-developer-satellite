@@ -5,10 +5,12 @@
 #   LIGHTSTEP_USER
 #   LIGHTSTEP_PROJECT
 
-# To test an alternate image (e.g., the canary), modify IMAGE.
+# To test an alternate image (e.g., the canary), modify IMAGE and/or IMAGE_TAG.
 : "${IMAGE:=lightstep/developer-satellite}"
+: "${IMAGE_TAG:=latest}"
 
-IMAGE_VERSION=${IMAGE}:latest
+IMAGE_VERSION="${IMAGE}:${IMAGE_TAG}"
+
 PSNAME=lightstep_developer_satellite
 
 STOP_CMD='  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
@@ -180,4 +182,4 @@ echo "when this machine reboots.  To stop this process, run:"
 echo "${STOP_CMD}"
 echo
 
-docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE}
+docker run -d ${DARGS} ${PARGS} --name ${container} --restart always ${IMAGE_VERSION}
