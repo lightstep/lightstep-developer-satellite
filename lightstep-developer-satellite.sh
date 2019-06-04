@@ -15,7 +15,7 @@ PSNAME=lightstep_developer_satellite
 
 STOP_CMD='  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
 
-docker > /dev/null 2>&1
+docker info > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "This version of the LightStep Satellite requires docker.  Please install docker before proceeding."
   exit 1
@@ -167,7 +167,6 @@ PARGS="
 # Lookup the host's IP address that can be used by other containers to reach
 # this satellite.
 docker_hostip=$(docker network inspect bridge --format '{{ (index .IPAM.Config 0).Gateway }}')
-
 
 container=lightstep_developer_satellite
 
