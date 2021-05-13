@@ -65,6 +65,7 @@ fi
 # including those derived from the LIGHTSTEP_* argument variables.
 
 COLLECTOR_API_KEY="${LIGHTSTEP_API_KEY}"
+COLLECTOR_FORWARDED_TAGS="neena_testing:true"
 
 # Developer-mode specifics
 : "${COLLECTOR_POOL:=developer-satellite}"
