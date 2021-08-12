@@ -36,21 +36,21 @@ if [ -n "$ID" ]; then
   done
 fi
 
-if [ -z "$LIGHTSTEP_USER" ]; then 
+if [ -z "$LIGHTSTEP_USER" ]; then
   echo "LIGHTSTEP_USER is not set.  This is the e-mail address you use for sign-in."
   echo "Please enter your user name:"
   read -r LIGHTSTEP_USER
   echo "Thank you. In the future you may set LIGHTSTEP_USER to skip this step."
 fi
 
-if [ -z "$LIGHTSTEP_PROJECT" ]; then 
+if [ -z "$LIGHTSTEP_PROJECT" ]; then
   echo "LIGHTSTEP_PROJECT is not set.  This is the name of your project on LightStep."
   echo "Please enter your project name:"
   read -r LIGHTSTEP_PROJECT
   echo "Thank you. In the future you may set LIGHTSTEP_PROJECT to skip this step."
 fi
 
-if [ -z "$LIGHTSTEP_API_KEY" ]; then 
+if [ -z "$LIGHTSTEP_API_KEY" ]; then
   echo "LIGHTSTEP_API_KEY is not set.  You can retrieve an API key from"
   echo "http://app.lightstep.com/${LIGHTSTEP_PROJECT}/developer-mode"
   echo "Please enter an API key:"
@@ -99,7 +99,7 @@ docker pull ${IMAGE_VERSION}
 VARS="
  COLLECTOR_ADMIN_PLAIN_PORT
  COLLECTOR_ADMIN_SECURE_PORT
- COLLECTOR_API_KEY 
+ COLLECTOR_API_KEY
  COLLECTOR_BABYSITTER_PORT
  COLLECTOR_DISABLE_ACCESS_TOKEN_CHECKING
  COLLECTOR_ENABLE_META_EVENTS
@@ -118,14 +118,17 @@ VARS="
  COLLECTOR_LOGGING_STDERR_CONFIG_FORMAT_HIDE_CALLSTACK
  COLLECTOR_LOGGING_STDERR_CONFIG_FORMAT_HIDE_TAGS
  COLLECTOR_LOGGING_VERBOSE
- COLLECTOR_PLAIN_PORT 
- COLLECTOR_POOL 
+ COLLECTOR_PLAIN_PORT
+ COLLECTOR_POOL
  COLLECTOR_PROJECT_NAME
  COLLECTOR_RAINBOW_GRPC_HOST
  COLLECTOR_RAINBOW_GRPC_PLAINTEXT
  COLLECTOR_RAINBOW_GRPC_PORT
  COLLECTOR_REPORTER_BYTES_PER_PROJECT
  COLLECTOR_ROUTING_TAGS
+ COLLECTOR_SPACE_STATION_GRPC_CONNECTION_MULTIPLICITY
+ COLLECTOR_SPACE_STATION_GRPC_ENDPOINT_ADDRESS
+ COLLECTOR_SATELLITE_TYPE_FLAVOR
 "
 
 DARGS=""
