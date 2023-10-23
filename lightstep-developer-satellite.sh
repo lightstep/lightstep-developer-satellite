@@ -6,7 +6,7 @@
 #   LIGHTSTEP_PROJECT
 
 # To test an alternate image (e.g., the canary), modify IMAGE and/or IMAGE_TAG.
-: "${IMAGE:=lightstep/developer-satellite}"
+: "${IMAGE:=lightstep/microsatellite}"
 : "${IMAGE_TAG:=latest}"
 
 IMAGE_VERSION="${IMAGE}:${IMAGE_TAG}"
