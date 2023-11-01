@@ -15,7 +15,7 @@ PSNAME=lightstep_developer_satellite
 
 STOP_CMD='  bash -c "$(curl -L https://raw.githubusercontent.com/lightstep/lightstep-developer-satellite/master/stop-developer-satellite.sh)"'
 
-docker > /dev/null 2>&1
+docker version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "This version of the LightStep Satellite requires docker.  Please install docker before proceeding."
   exit 1
